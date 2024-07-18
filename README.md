@@ -1,7 +1,9 @@
 # MindAI
 
 ![MindAI-anasayfa](https://github.com/user-attachments/assets/201a1845-52ee-4405-86ab-e43bf8217627)
-
+<p align="center">
+  <img src="(https://github.com/user-attachments/assets/201a1845-52ee-4405-86ab-e43bf8217627" alt="MindDI Logo" width="200" />
+</p>
 
 MindAI, eğitimde yapay zeka kullanarak öğrenme süreçlerini optimize eden ve kişiselleştirilmiş öğrenme deneyimleri sunan bir mobil uygulamadır. Bu proje, kullanıcıların öğrenme stillerini analiz ederek, onlara özel öğrenme yolları oluşturan ve içerikleri kişiselleştiren bir sistem geliştirmeyi amaçlamaktadır.
 
