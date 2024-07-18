@@ -1,6 +1,6 @@
 # MindAI
 
-![MindAI-anasayfa](https://github.com/user-attachments/assets/201a1845-52ee-4405-86ab-e43bf8217627)
+
 <p align="center">
   <img src="![MindAI-anasayfa](https://github.com/user-attachments/assets/27b211bf-c5ae-48ae-b636-8361255227d0)" alt="MindDI Logo" width="200" />
 </p>
