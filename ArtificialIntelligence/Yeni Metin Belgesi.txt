@@ -1,0 +1,87 @@
+from openai import OpenAI
+import sqlite3
+import time
+
+# API anahtarınızı buraya girin
+OPEN_AI_API_KEY = 'sk-proj-zwuUNFoZ1THorGw93YEzT3BlbkFJpTjKYRiJEfzckgO6z80C'
+ASSISTANT_ID='asst_nsPYyB9V7aFV2plIrm6R3qwJ'
+client = OpenAI(api_key=OPEN_AI_API_KEY)
+
+
+def create_table():
+    conn = sqlite3.connect('26temmuzsonveritabani.db')
+    c = conn.cursor()
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        response TEXT
+    )
+    ''')
+    conn.commit()
+    conn.close()
+
+def add_user(name, age, email, messages):
+    conn = sqlite3.connect('26temmuzsonveritabani.db')
+    c = conn.cursor()
+    try:
+        c.execute("INSERT INTO users (name, age, email, messages) VALUES (?, ?, ?, ?)", (name, age, email, messages))
+        conn.commit()
+        print("Kullanıcı ve yanıt eklendi.")
+    except sqlite3.IntegrityError as e:
+        print(f"IntegrityError: {e}")
+    except sqlite3.OperationalError as e:
+        print(f"OperationalError: {e}")
+    except sqlite3.Error as e:
+        print(f"Database Error: {e}")
+    finally:
+        conn.close()
+
+def main():
+    create_table()  # Tabloyu oluştur
+    ASSISTANT_ID='asst_nsPYyB9V7aFV2plIrm6R3qwJ'
+
+    while True:
+        try:
+            # Kullanıcıdan metin girişi al
+            name = input("Adınız, soyadınız: ")
+            age = int(input("Yaşınız: "))  # Yaşı integer olarak alın
+            email = input("Mailiniz: ")
+            text = input("Size bir yol haritası oluşturabilmem için ilgilenmek istediğiniz alan hakkında sorunuzu yazınız (Çıkmak için 'q' girin): ")
+            
+            if text.lower() == 'q':  # çıkış koşulu
+                print("Programdan çıkılıyor...")
+                break
+
+            # Sohbet isteği oluşturma
+            thread = client.beta.threads.create()
+
+            thread = client.beta.threads.create(
+                thread_id=thread.id,
+                role="user",
+                content=text
+            )
+            
+            print("İstek Gönderildi, Cevap Bekleniyor...")
+
+            run = client.beta.threads.runs.create_and_poll(
+                thread_id=thread.id,
+                assistant_id=ASSISTANT_ID
+                )
+
+            # Yanıtı al
+            while run.status != "completed":
+                messages = client.beta.threads.messages.list(thread_id=thread.id)
+                time.sleep(2)
+            print(messages)
+
+
+            add_user(name, age, email, messages)
+
+        except Exception as e:
+            print(f"Bir hata oluştu: {e}")
+
+if __name__ == "__main__":
+    main()
